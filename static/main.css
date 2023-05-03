@@ -155,3 +155,19 @@ button:hover {
   border: 2px solid #353740;
   border-radius: 4px;
 }
+
+footer {
+  font-size: 12px;
+  text-align: right;
+  margin-top: 20px;
+}
+
+footer p {
+  float: right;
+  margin: 0;
+  padding: 0;
+}
+
+footer p.dirty {
+  color: red;
+}

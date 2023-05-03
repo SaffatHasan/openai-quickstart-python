@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import openai
 from flask import Flask, render_template, request
@@ -54,3 +55,9 @@ def prompt():
 
     print(f"DEBUG: {response=}")
     return response.choices[0].text
+
+@app.context_processor
+def inject_git_commit():
+    commit= subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode("utf-8").strip()
+    dirty = subprocess.check_output(['git', 'diff-index', 'HEAD', '--']) != b''
+    return dict(commit=commit, dirty=dirty)
