@@ -24,7 +24,7 @@
     <input type="submit" value="Generate response" />
   </form>
 
-  <div id="result"></div>
+  <div id="result" class="hidden"></div>
   <script>
     const form = document.getElementById("prompt-form");
     const resultDiv = document.querySelector("div#result");
@@ -40,6 +40,7 @@
         .then((unformatted_data) => unformatted_data.split("\n").map((line) => `<p>${line}</p>`).join(""))
         .then((data) => {
           resultDiv.innerHTML = `<p>${data}</p>`;
+          resultDiv.classList.remove('hidden');
         });
     });
   </script>
