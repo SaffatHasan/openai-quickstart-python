@@ -22,6 +22,10 @@
       {% endfor %}
     </select>
     <input type="textarea" id="prompt" name="prompt" rows=5 placeholder="Enter a prompt" required />
+    <div>
+      <label for="dry_run">Dry run?</label>
+      <input type="checkbox" id="dry_run" name="dry_run"></input>
+    </div>
     <input type="submit" value="Generate response" />
   </form>
 

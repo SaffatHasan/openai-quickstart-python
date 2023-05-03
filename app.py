@@ -22,6 +22,8 @@ def index():
 
 @app.route("/prompt", methods=["POST"])
 def prompt():
+    if request.form["dry_run"]:
+        return "\n\nWagging tails, so happy\nLoyal friends, our joys"
     prompt = request.form["prompt"]
     model = request.form["model"]
     if model not in AVAILABLE_MODELS:
