@@ -32,8 +32,9 @@ def index():
 
 @app.route("/prompt", methods=["POST"])
 def prompt():
-    if request.form["dry_run"]:
+    if request.form.get("dry_run"):
         return "\n\nWagging tails, so happy\nLoyal friends, our joys"
+
     prompt = request.form["prompt"]
     model = request.form["model"]
     if model not in AVAILABLE_MODELS:
@@ -53,4 +54,3 @@ def prompt():
 
     print(f"DEBUG: {response=}")
     return response.choices[0].text
-
