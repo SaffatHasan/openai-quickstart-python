@@ -1,20 +1,30 @@
 import os
 
 import openai
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# TODO: Cache this in a file instead.
-def get_models():
-    response = openai.Model.list()
-    data = response["data"]
-    return [model['id'] for model in data]
+# https://platform.openai.com/docs/models/model-endpoint-compatibility
+COMPLETION_MODELS = [
+    "text-davinci-003",
+    "text-davinci-002",
+    "text-curie-001",
+    "text-babbage-001",
+    "text-ada-001",
+]
 
-# Load models at the start as a global variable so we don't keep
-# asking.
-AVAILABLE_MODELS = get_models()
+# CHAT_MODELS = [
+#     "gpt-4",
+#     "gpt-4-0314",
+#     "gpt-4-32k",
+#     "gpt-4-32k-0314",
+#     "gpt-3.5-turbo",
+#     "gpt-3.5-turbo-0301",
+# ]
+
+AVAILABLE_MODELS = sorted(COMPLETION_MODELS)
 
 @app.route("/", methods=["GET"])
 def index():
@@ -29,11 +39,18 @@ def prompt():
     if model not in AVAILABLE_MODELS:
         new_line = '\n'
         return f"ERROR: {model} is not a valid model. Must be one of:\n{new_line.join(AVAILABLE_MODELS)}"
-    response = openai.Completion.create(
-        model=model,
-        prompt=prompt,
-        temperature=0.5,
-    )
+
+    # TODO: add support for more than text completion.
+    # https://github.com/openai/openai-python#chat
+    try:
+        response = openai.Completion.create(
+            model=model,
+            prompt=prompt,
+            temperature=0.5,
+        )
+    except openai.error.InvalidRequestError as e:
+        return str(e)
+
     print(f"DEBUG: {response=}")
     return response.choices[0].text
 
